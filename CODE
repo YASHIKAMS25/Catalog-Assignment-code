@@ -1,0 +1,130 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class PolynomialConstantFinder {
+    // Convert a number in a given base to its decimal (base 10) value
+    public static int convertToDecimal(String value, int base) {
+        return Integer.parseInt(value, base);
+    }
+
+    // Calculate the Lagrange basis polynomial L_j(0)
+    public static double lagrangeBasis(double[] xPoints, int j, double x) {
+        double Lj = 1.0;
+        for (int m = 0; m < xPoints.length; m++) {
+            if (m != j) {
+                Lj *= (x - xPoints[m]) / (xPoints[j] - xPoints[m]);
+            }
+        }
+        return Lj;
+    }
+
+    // Find the constant term 'c' using Lagrange interpolation
+    public static double findConstantTerm(double[] xPoints, double[] yPoints) {
+        double constantTerm = 0.0;
+        for (int j = 0; j < yPoints.length; j++) {
+            double LjAtZero = lagrangeBasis(xPoints, j, 0);
+            constantTerm += yPoints[j] * LjAtZero;
+        }
+        return constantTerm;
+    }
+
+    public static void main(String[] args) {
+        // Example input test case
+        Map<String, Map<String, String>> testCase = new HashMap<>();
+        
+        // Populate the test case using HashMap
+        Map<String, String> keysMap = new HashMap<>();
+        keysMap.put("n", "4");
+        keysMap.put("k", "3");
+        testCase.put("keys", keysMap);
+        
+        Map<String, String> point1 = new HashMap<>();
+        point1.put("base", "10");
+        point1.put("value", "4");
+        testCase.put("1", point1);
+
+        Map<String, String> point2 = new HashMap<>();
+        point2.put("base", "2");
+        point2.put("value", "111");
+        testCase.put("2", point2);
+
+        Map<String, String> point3 = new HashMap<>();
+        point3.put("base", "10");
+        point3.put("value", "12");
+        testCase.put("3", point3);
+
+        Map<String, String> point4 = new HashMap<>();
+        point4.put("base", "4");
+        point4.put("value", "213");
+        testCase.put("6", point4);
+
+        // keysMap.put("n", "9");
+        // keysMap.put("k", "6");
+        // testCase.put("keys", keysMap);
+        
+        // Map<String, String> point1 = new HashMap<>();
+        // point1.put("base", "10");
+        // point1.put("value", "28735619723837");
+        // testCase.put("1", point1);
+
+        // Map<String, String> point2 = new HashMap<>();
+        // point2.put("base", "16");
+        // point2.put("value", "1A228867F0CA");
+        // testCase.put("2", point2);
+
+        // Map<String, String> point3 = new HashMap<>();
+        // point3.put("base", "12");
+        // point3.put("value", "32811A4AA0B7B");
+        // testCase.put("3", point3);
+
+        // Map<String, String> point4 = new HashMap<>();
+        // point4.put("base", "11");
+        // point4.put("value", "917978721331A");
+        // testCase.put("4", point4);
+
+        // Map<String, String> point5 = new HashMap<>();
+        // point5.put("base", "16");
+        // point5.put("value", "1A22886782E1");
+        // testCase.put("5", point5);
+
+        // Map<String, String> point6 = new HashMap<>();
+        // point6.put("base", "10");
+        // point6.put("value", "28735619654702");
+        // testCase.put("6", point6);
+
+        // Map<String, String> point7 = new HashMap<>();
+        // point7.put("base", "14");
+        // point7.put("value", "71AB5070CC4B");
+        // testCase.put("7", point7);
+
+        // Map<String, String> point8 = new HashMap<>();
+        // point8.put("base", "9");
+        // point8.put("value", "122662581541670");
+        // testCase.put("8", point8);
+
+        // Map<String, String> point9 = new HashMap<>();
+        // point9.put("base", "8");
+        // point9.put("value", "642121030037605");
+        // testCase.put("9", point9);
+
+        // Convert and store x and y points based on the test case
+        double[] xPoints = new double[testCase.size() - 1];
+        double[] yPoints = new double[testCase.size() - 1];
+
+        int index = 0;
+        for (String key : testCase.keySet()) {
+            if (!key.equals("keys")) {
+                Map<String, String> point = testCase.get(key);
+                int base = Integer.parseInt(point.get("base"));
+                int value = convertToDecimal(point.get("value"), base);
+                xPoints[index] = Double.parseDouble(key); // Use the point's key as the x-value
+                yPoints[index] = value;
+                index++;
+            }
+        }
+
+        // Calculate the constant term 'c' using Lagrange interpolation
+        double constantTerm = findConstantTerm(xPoints, yPoints);
+        System.out.printf("The constant term (c) is: %.2f\n", constantTerm);
+    }
+}
